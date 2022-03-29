@@ -1,9 +1,12 @@
 const connectToMongo = require('./db')
-
+var express = require('express')
+var cors = require('cors')
 connectToMongo();
 
-const express = require('express')
+
+
 const app = express()
+app.use(cors())
 const port = 5000
 
 // Middleware to use req.body
@@ -15,5 +18,5 @@ app.use('/api/notes',require('./routes/notes.js'))
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`iNoteBook app listening on port ${port}`)
 })

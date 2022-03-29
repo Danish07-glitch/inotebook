@@ -1,0 +1,52 @@
+import React, { useContext,useState } from 'react'
+import Notes from "./Notes"
+import noteContext from '../context/notes/NoteContext'
+
+
+function AddNote() {
+    const context = useContext(noteContext)
+    const [note, setNote] = useState({title:"",description:"",tag:""})
+    const {addNote}= context
+    
+    const handleClick=(e)=>{
+
+        e.preventDefault();   // Page will not be reloaded
+        console.log(note.title,note.description,note.tag)
+        addNote(note.title,note.description,note.tag)
+
+    }
+    const onChange=(e)=>{
+
+        setNote({...note,[e.target.name]:e.target.value})
+
+
+    }
+  return (
+    <div className='container my-3'>
+    <h1>Add a Note</h1>
+
+    <form>
+        <div className="mb-3">
+            <label htmlFor="title" className="form-label">Title</label>
+            <input type="text" name='title' className="form-control" id="title" onChange={onChange} aria-describedby="title"/> 
+        </div>
+        <div className="mb-3">
+            <label htmlFor="description" className="form-label">Description</label>
+          <textarea name="description" id="description"  className="form-control" onChange={onChange} cols="30" rows="10"></textarea>
+        </div>
+        <div className="mb-3">
+            <label htmlFor="tag" className="form-label">Tag</label>
+            <input name='tag' type="text" className="form-control" id="tag" aria-describedby="tag" onChange={onChange}/>
+        </div>
+
+        <button type="submit" className="btn btn-primary" onClick={handleClick}>Add Note</button>
+    </form>
+    
+
+  
+  
+</div>
+  )
+}
+
+export default AddNote
