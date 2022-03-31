@@ -15,20 +15,23 @@ router.post('/createuser',[
    body('email').isEmail(),
    body('password').isLength({ min: 5 }),
 ],async (req,res)=>{
+   let success=true
+  
 
 
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
-     return res.status(400).json({ errors: errors.array() });
+      success=false
+     return res.status(400).json({success, errors: errors.array() });
    }
 
    try{
 
    
-   
    let user = await User.findOne({email:req.body.email})
    if (user){
-      return res.status(400).json({error:"User with this email already exist"})
+      success=false
+      return res.status(400).json({success,error:"User with this email already exist"})
 
    }
    var salt =  bcrypt.genSaltSync(10);
@@ -47,7 +50,7 @@ router.post('/createuser',[
     }
     const authtoken = jwt.sign(data,JWT_SECRET)
    //  res.json(user)
-   res.json({authtoken})
+   res.json({success,authtoken})
 
    } catch(err){
       console.log(err.message)
@@ -60,6 +63,7 @@ router.post('/login',[
    body('email','enter a valid email').isEmail(),
    body('password','password cannot be blank').exists(),
 ], async (req,res)=>{
+   let success=true
 
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
@@ -70,12 +74,14 @@ router.post('/login',[
    try {
       let user = await User.findOne({email})
       if(!user){
-         return res.status(400).json({Error:"Username or password does not match"})
+         success=false
+         return res.status(400).json({success,Error:"Username or password does not match"})
       }
       const passcompare= bcrypt.compareSync(password,user.password)
 
       if(!passcompare){
-         return res.status(400).json({Error:"Username or password does not match"})
+         success=false
+         return res.status(400).json({success,Error:"Username or password does not match"})
 
       }
       const data={
@@ -84,7 +90,7 @@ router.post('/login',[
          }
       }
       const authtoken =jwt.sign(data,JWT_SECRET)
-      res.json({authtoken})
+      res.json({success,authtoken})
    } catch (err) {
       console.log(err.message)
       res.status(400).send({error:"internal server error occured"})
