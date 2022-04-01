@@ -3,7 +3,8 @@ import Notes from "./Notes"
 import noteContext from '../context/notes/NoteContext'
 
 
-function AddNote() {
+function AddNote(props) {
+    const {showAlert}= props
     const context = useContext(noteContext)
     const [note, setNote] = useState({title:"",description:"",tag:""})
     const {addNote}= context
@@ -14,6 +15,8 @@ function AddNote() {
         console.log(note.title,note.description,note.tag)
         addNote(note.title,note.description,note.tag)
         setNote({title:"",description:"",tag:""})
+        showAlert("Note Added SuccessFully","success")
+
 
     }
     const onChange=(e)=>{
